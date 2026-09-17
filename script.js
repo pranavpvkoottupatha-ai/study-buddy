@@ -1,1127 +1,526 @@
-// ============================================
-// STUDY BUDDY V2
-// ============================================
-
-
-// ============================================
-// DATA
-// ============================================
-
-const subjectsData = {
-
-  Maths: {
-    icon: "📐",
-    description: "Numbers, algebra and geometry",
-
-    chapters: [
-      {
-        name: "Number Systems",
-        description: "Learn about different types of numbers."
-      },
-      {
-        name: "Polynomials",
-        description: "Learn polynomial expressions and operations."
-      },
-      {
-        name: "Coordinate Geometry",
-        description: "Learn points and coordinates."
-      },
-      {
-        name: "Linear Equations",
-        description: "Practice equations with variables."
-      },
-      {
-        name: "Triangles",
-        description: "Learn triangle properties and theorems."
-      }
-    ]
-  },
-
-
-  Physics: {
-    icon: "⚡",
-    description: "Motion, force and energy",
-
-    chapters: [
-      {
-        name: "Motion",
-        description: "Learn distance, displacement, speed and velocity."
-      },
-      {
-        name: "Force and Laws of Motion",
-        description: "Understand force and Newton's laws."
-      },
-      {
-        name: "Gravitation",
-        description: "Learn about gravity and gravitational force."
-      },
-      {
-        name: "Work and Energy",
-        description: "Understand work, energy and power."
-      },
-      {
-        name: "Sound",
-        description: "Learn how sound is produced and travels."
-      }
-    ]
-  },
-
-
-  Chemistry: {
-    icon: "🧪",
-    description: "Matter, atoms and reactions",
-
-    chapters: [
-      {
-        name: "Matter Around Us",
-        description: "Learn about states and properties of matter."
-      },
-      {
-        name: "Atoms and Molecules",
-        description: "Learn about atoms, molecules and formulas."
-      },
-      {
-        name: "Structure of Atom",
-        description: "Understand electrons, protons and neutrons."
-      },
-      {
-        name: "Chemical Reactions",
-        description: "Introduction to chemical changes."
-      }
-    ]
-  },
-
-
-  Biology: {
-    icon: "🧬",
-    description: "Life, cells and organisms",
-
-    chapters: [
-      {
-        name: "The Fundamental Unit of Life",
-        description: "Learn about cells and their structures."
-      },
-      {
-        name: "Tissues",
-        description: "Learn about plant and animal tissues."
-      },
-      {
-        name: "Diversity in Living Organisms",
-        description: "Learn how living organisms are classified."
-      },
-      {
-        name: "Why Do We Fall Ill?",
-        description: "Learn basic concepts of health and disease."
-      }
-    ]
-  },
-
-
-  "Social Science": {
-    icon: "🌍",
-    description: "History, geography and society",
-
-    chapters: [
-      {
-        name: "India: Size and Location",
-        description: "Learn about India's geographical location."
-      },
-      {
-        name: "Physical Features of India",
-        description: "Explore India's major physical divisions."
-      },
-      {
-        name: "Climate",
-        description: "Learn about India's climate."
-      },
-      {
-        name: "Democracy",
-        description: "Understand basic ideas of democracy."
-      },
-      {
-        name: "Constitutional Design",
-        description: "Learn why constitutions are important."
-      }
-    ]
-  },
-
-
-  English: {
-    icon: "📖",
-    description: "Grammar, writing and literature",
-
-    chapters: [
-      {
-        name: "Grammar",
-        description: "Practice important grammar concepts."
-      },
-      {
-        name: "Reading Comprehension",
-        description: "Improve reading and understanding."
-      },
-      {
-        name: "Writing Skills",
-        description: "Practice different forms of writing."
-      },
-      {
-        name: "Literature",
-        description: "Read and understand literary texts."
-      }
-    ]
-  }
-
-};
-
-
-// ============================================
-// ELEMENTS
-// ============================================
-
-const subjectsElement =
-  document.getElementById("subjects");
-
-const chapterSection =
-  document.getElementById("chapterSection");
-
-const chapterDetails =
-  document.getElementById("chapterDetails");
-
-const quizSection =
-  document.getElementById("quizSection");
-
-const chaptersElement =
-  document.getElementById("chapters");
-
-const chapterTitle =
-  document.getElementById("chapterTitle");
-
-const selectedChapterTitle =
-  document.getElementById("selectedChapterTitle");
-
-const chapterDescription =
-  document.getElementById("chapterDescription");
-
-const chapterNotes =
-  document.getElementById("chapterNotes");
-
-const searchInput =
-  document.getElementById("searchInput");
-
-
-// ============================================
-// APP STATE
-// ============================================
-
-let selectedSubject = null;
-let selectedChapter = null;
-
-let currentQuiz = [];
-let currentQuestion = 0;
-let quizScore = 0;
-
-let timerInterval = null;
-let timeLeft = 25 * 60;
-
-let totalStudySeconds =
-  Number(localStorage.getItem("studySeconds")) || 0;
-
-let completedChapters =
-  JSON.parse(
-    localStorage.getItem("completedChapters") || "[]"
-  );
-
-
-// ============================================
-// STUDENT SETUP
-// ============================================
-
-const studentName =
-  document.getElementById("studentName");
-
-const classSelect =
-  document.getElementById("classSelect");
-
-const studentGreeting =
-  document.getElementById("studentGreeting");
-
-const saveStudentBtn =
-  document.getElementById("saveStudentBtn");
-
-const studentMessage =
-  document.getElementById("studentMessage");
-
-
-studentName.value =
-  localStorage.getItem("studentName") || "";
-
-classSelect.value =
-  localStorage.getItem("studentClass") || "9";
-
-
-function updateGreeting() {
-
-  const name =
-    localStorage.getItem("studentName");
-
-  if (name && name.trim() !== "") {
-    studentGreeting.textContent = name;
-  } else {
-    studentGreeting.textContent = "Student";
-  }
-
-}
-
-
-updateGreeting();
-
-
-saveStudentBtn.addEventListener("click", () => {
-
-  const name =
-    studentName.value.trim();
-
-  const studentClass =
-    classSelect.value;
-
-  if (name === "") {
-
-    studentMessage.textContent =
-      "⚠️ Please enter your name.";
-
-    return;
-  }
-
-  localStorage.setItem(
-    "studentName",
-    name
-  );
-
-  localStorage.setItem(
-    "studentClass",
-    studentClass
-  );
-
-  updateGreeting();
-
-  studentMessage.textContent =
-    "✅ Student details saved!";
-
-  setTimeout(() => {
-    studentMessage.textContent = "";
-  }, 2500);
-
-});
-
-
-// ============================================
-// DARK MODE
-// ============================================
-
-const darkModeBtn =
-  document.getElementById("darkModeBtn");
-
-
-darkModeBtn.addEventListener("click", () => {
-
-  document.body.classList.toggle("dark");
-
-  const dark =
-    document.body.classList.contains("dark");
-
-  localStorage.setItem(
-    "darkMode",
-    dark ? "on" : "off"
-  );
-
-  darkModeBtn.textContent =
-    dark ? "☀️" : "🌙";
-
-});
-
-
-if (
-  localStorage.getItem("darkMode") === "on"
-) {
-
-  document.body.classList.add("dark");
-
-  darkModeBtn.textContent = "☀️";
-
-}
-
-
-// ============================================
-// SHOW SUBJECTS
-// ============================================
-
-function showSubjects() {
-
-  subjectsElement.innerHTML = "";
-
-  Object.entries(subjectsData).forEach(
-    ([subject, data]) => {
-
-      const card =
-        document.createElement("button");
-
-      card.className = "subject-card";
-
-      card.dataset.subject = subject;
-
-      card.innerHTML = `
-        <span>${data.icon}</span>
-        <strong>${subject}</strong>
-        <small>${data.description}</small>
-      `;
-
-      card.addEventListener(
-        "click",
-        () => showChapters(subject)
-      );
-
-      subjectsElement.appendChild(card);
-
-    }
-  );
-
-  document.getElementById(
-    "subjectCount"
-  ).textContent =
-    Object.keys(subjectsData).length;
-
-}
-
-
-showSubjects();
-
-
-// ============================================
-// SHOW CHAPTERS
-// ============================================
-
-function showChapters(subject) {
-
-  selectedSubject = subject;
-
-  selectedChapter = null;
-
-  chapterTitle.textContent =
-    `${subjectsData[subject].icon} ${subject} Chapters`;
-
-  chaptersElement.innerHTML = "";
-
-  subjectsData[subject].chapters.forEach(
-    (chapter, index) => {
-
-      const card =
-        document.createElement("button");
-
-      const chapterKey =
-        `${subject}-${index}`;
-
-      const isCompleted =
-        completedChapters.includes(chapterKey);
-
-      card.className =
-        "chapter-card" +
-        (isCompleted ? " completed" : "");
-
-      card.innerHTML = `
-        <h3>
-          ${index + 1}. ${chapter.name}
-        </h3>
-
-        <p>
-          ${chapter.description}
-        </p>
-
-        ${
-          isCompleted
-          ? `<span class="completed-badge">
-               ✅ Completed
-             </span>`
-          : ""
-        }
-      `;
-
-      card.addEventListener(
-        "click",
-        () => showChapterDetails(
-          subject,
-          index
-        )
-      );
-
-      chaptersElement.appendChild(card);
-
-    }
-  );
-
-  chapterSection.classList.remove("hidden");
-
-  chapterDetails.classList.add("hidden");
-
-  quizSection.classList.add("hidden");
-
-  window.scrollTo({
-    top: chapterSection.offsetTop - 15,
-    behavior: "smooth"
-  });
-
-}
-
-
-// ============================================
-// SHOW CHAPTER DETAILS
-// ============================================
-
-function showChapterDetails(
-  subject,
-  chapterIndex
-) {
-
-  selectedSubject = subject;
-
-  selectedChapter = chapterIndex;
-
-  const chapter =
-    subjectsData[subject].chapters[chapterIndex];
-
-  selectedChapterTitle.textContent =
-    `📖 ${chapter.name}`;
-
-  chapterDescription.textContent =
-    chapter.description;
-
-  const noteKey =
-    `notes-${subject}-${chapterIndex}`;
-
-  chapterNotes.value =
-    localStorage.getItem(noteKey) || "";
-
-  chapterDetails.classList.remove(
-    "hidden"
-  );
-
-  quizSection.classList.add(
-    "hidden"
-  );
-
-  window.scrollTo({
-    top: chapterDetails.offsetTop - 15,
-    behavior: "smooth"
-  });
-
-}
-
-
-// ============================================
-// SAVE CHAPTER NOTES
-// ============================================
-
-const saveChapterNotesBtn =
-  document.getElementById(
-    "saveChapterNotesBtn"
-  );
-
-const chapterNoteMessage =
-  document.getElementById(
-    "chapterNoteMessage"
-  );
-
-
-saveChapterNotesBtn.addEventListener(
-  "click",
-  () => {
-
-    if (
-      selectedSubject === null ||
-      selectedChapter === null
-    ) {
-      return;
-    }
-
-    const noteKey =
-      `notes-${selectedSubject}-${selectedChapter}`;
-
-    localStorage.setItem(
-      noteKey,
-      chapterNotes.value
-    );
-
-    chapterNoteMessage.textContent =
-      "✅ Chapter notes saved!";
-
-    setTimeout(() => {
-
-      chapterNoteMessage.textContent = "";
-
-    }, 2500);
-
-  }
-);
-
-
-// ============================================
-// MARK CHAPTER COMPLETE
-// ============================================
-
-const completeChapterBtn =
-  document.getElementById(
-    "completeChapterBtn"
-  );
-
-
-completeChapterBtn.addEventListener(
-  "click",
-  () => {
-
-    if (
-      selectedSubject === null ||
-      selectedChapter === null
-    ) {
-      return;
-    }
-
-    const chapterKey =
-      `${selectedSubject}-${selectedChapter}`;
-
-    if (
-      !completedChapters.includes(
-        chapterKey
-      )
-    ) {
-
-      completedChapters.push(
-        chapterKey
-      );
-
-      localStorage.setItem(
-        "completedChapters",
-        JSON.stringify(
-          completedChapters
-        )
-      );
-
-    }
-
-    updateProgress();
-
-    showChapters(selectedSubject);
-
-    alert(
-      "🎉 Chapter marked as completed!"
-    );
-
-  }
-);
-
-
-// ============================================
-// CHAPTER QUIZ DATABASE
-// ============================================
-
-const quizDatabase = {
-
-  "Maths-0": [
-    {
-      question:
-        "Which number is irrational?",
-      answers: [
-        "2",
-        "3",
-        "√2",
-        "4"
+// ==========================================
+// STUDY BUDDY - CLASS-WISE LESSON SYSTEM
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  // ---------- CLASS-WISE LESSON DATABASE ----------
+
+  const lessons = {
+
+    "8": {
+      Maths: [
+        ["Rational Numbers", "Learn rational numbers, their properties and operations."],
+        ["Linear Equations in One Variable", "Solve simple linear equations in one variable."],
+        ["Understanding Quadrilaterals", "Learn different types of quadrilaterals and their properties."],
+        ["Data Handling", "Learn how to collect, represent and interpret data."],
+        ["Squares and Square Roots", "Learn squares, square roots and related methods."],
+        ["Cubes and Cube Roots", "Learn cubes and cube roots."],
+        ["Comparing Quantities", "Learn percentages, profit, loss and discounts."],
+        ["Algebraic Expressions", "Learn expressions, terms, coefficients and operations."]
       ],
-      correct: "√2"
+
+      Physics: [
+        ["Force and Pressure", "Learn about force, pressure and their effects."],
+        ["Friction", "Understand friction and factors affecting friction."],
+        ["Sound", "Learn how sound is produced and travels."],
+        ["Light", "Study reflection and basic properties of light."],
+        ["Stars and the Solar System", "Explore stars, planets and the solar system."]
+      ],
+
+      Chemistry: [
+        ["Coal and Petroleum", "Learn about fossil fuels and their uses."],
+        ["Combustion and Flame", "Study combustion and different types of flames."],
+        ["Synthetic Fibres and Plastics", "Learn about synthetic materials and plastics."]
+      ],
+
+      Biology: [
+        ["Crop Production and Management", "Learn how crops are grown and managed."],
+        ["Microorganisms", "Study useful and harmful microorganisms."],
+        ["Cell Structure and Functions", "Learn the basic structure and functions of cells."],
+        ["Reproduction in Animals", "Learn the basic process of reproduction in animals."]
+      ],
+
+      "Social Science": [
+        ["Resources", "Learn about natural, human-made and human resources."],
+        ["The Indian Constitution", "Understand the basic ideas of the Indian Constitution."],
+        ["Understanding Secularism", "Learn the meaning and importance of secularism."],
+        ["From Trade to Territory", "Study the expansion of British power in India."],
+        ["The Revolt of 1857", "Learn about the causes and events of the Revolt of 1857."]
+      ],
+
+      English: [
+        ["Reading Comprehension", "Improve your reading and understanding skills."],
+        ["Grammar", "Learn important English grammar rules."],
+        ["Tenses", "Learn present, past and future tenses."],
+        ["Writing Skills", "Practice letters, paragraphs and other forms of writing."]
+      ]
     },
 
-    {
-      question:
-        "Which number is a natural number?",
-      answers: [
-        "-2",
-        "0",
-        "5",
-        "√2"
-      ],
-      correct: "5"
-    }
-  ],
 
+    // ==========================================
+    // CLASS 9
+    // ==========================================
 
-  "Physics-0": [
-    {
-      question:
-        "Which quantity describes how fast an object moves?",
-      answers: [
-        "Mass",
-        "Speed",
-        "Force",
-        "Density"
+    "9": {
+      Maths: [
+        ["Number Systems", "Learn rational and irrational numbers and their properties."],
+        ["Polynomials", "Learn polynomials, terms, coefficients, zeros and operations."],
+        ["Coordinate Geometry", "Learn coordinates, axes and plotting points."],
+        ["Linear Equations in Two Variables", "Understand and represent linear equations in two variables."],
+        ["Euclid's Geometry", "Learn the basic ideas and axioms of Euclidean geometry."],
+        ["Lines and Angles", "Study different types of angles and angle relationships."],
+        ["Triangles", "Learn congruence and properties of triangles."],
+        ["Quadrilaterals", "Study properties of parallelograms and other quadrilaterals."],
+        ["Circles", "Learn important terms and properties related to circles."],
+        ["Heron's Formula", "Calculate the area of triangles using Heron's formula."],
+        ["Surface Areas and Volumes", "Calculate surface areas and volumes of common solids."],
+        ["Statistics", "Learn collection, presentation and interpretation of data."],
+        ["Probability", "Understand basic probability and simple experiments."]
       ],
-      correct: "Speed"
+
+      Physics: [
+        ["Motion", "Learn distance, displacement, speed, velocity and acceleration."],
+        ["Force and Laws of Motion", "Study Newton's laws of motion and their applications."],
+        ["Gravitation", "Learn gravitational force, mass, weight and free fall."],
+        ["Work and Energy", "Understand work, energy and power."],
+        ["Sound", "Study production, propagation and characteristics of sound."]
+      ],
+
+      Chemistry: [
+        ["Matter in Our Surroundings", "Learn the physical nature and states of matter."],
+        ["Is Matter Around Us Pure?", "Study mixtures, solutions and separation methods."],
+        ["Atoms and Molecules", "Learn atoms, molecules and chemical formulas."],
+        ["Structure of the Atom", "Understand electrons, protons, neutrons and atomic structure."]
+      ],
+
+      Biology: [
+        ["The Fundamental Unit of Life", "Study cells and their structures."],
+        ["Tissues", "Learn plant and animal tissues."],
+        ["Diversity in Living Organisms", "Study classification and diversity of organisms."],
+        ["Why Do We Fall Ill?", "Learn about health, diseases and prevention."],
+        ["Natural Resources", "Understand air, water, soil and natural resources."]
+      ],
+
+      "Social Science": [
+        ["India – Size and Location", "Study India's location, size and geographical extent."],
+        ["Physical Features of India", "Learn about mountains, plains, plateaus and other physical divisions."],
+        ["Drainage", "Study India's river systems and drainage patterns."],
+        ["Climate", "Learn about India's climate and monsoon system."],
+        ["Democracy in the Contemporary World", "Understand important ideas about democracy."],
+        ["What is Democracy? Why Democracy?", "Learn the meaning and importance of democracy."],
+        ["People as Resource", "Understand the role of people in economic development."],
+        ["Poverty as a Challenge", "Study poverty and related issues in India."]
+      ],
+
+      English: [
+        ["The Fun They Had", "Read and understand the story and its themes."],
+        ["The Sound of Music", "Study the prose lessons and important ideas."],
+        ["The Little Girl", "Explore the story, characters and themes."],
+        ["A Truly Beautiful Mind", "Study the lesson and understand its key ideas."],
+        ["Grammar", "Practice tenses, modals, reported speech and other grammar topics."],
+        ["Writing Skills", "Practice descriptive writing, diary entries and other formats."]
+      ]
     },
 
-    {
-      question:
-        "The SI unit of speed is:",
-      answers: [
-        "Newton",
-        "Joule",
-        "m/s",
-        "Watt"
+
+    // ==========================================
+    // CLASS 10
+    // ==========================================
+
+    "10": {
+      Maths: [
+        ["Real Numbers", "Study Euclid's division algorithm and real numbers."],
+        ["Polynomials", "Learn zeros of polynomials and relationships between coefficients and zeros."],
+        ["Pair of Linear Equations", "Solve pairs of linear equations in two variables."],
+        ["Quadratic Equations", "Learn methods for solving quadratic equations."],
+        ["Arithmetic Progressions", "Study sequences, nth terms and sums."],
+        ["Triangles", "Learn similarity and important theorems of triangles."],
+        ["Coordinate Geometry", "Use coordinate geometry to calculate distances and areas."],
+        ["Introduction to Trigonometry", "Learn trigonometric ratios and identities."],
+        ["Circles", "Study tangents and properties of circles."],
+        ["Areas Related to Circles", "Calculate areas and perimeters involving circles."],
+        ["Surface Areas and Volumes", "Solve problems involving 3D shapes."],
+        ["Statistics", "Calculate and interpret statistical measures."],
+        ["Probability", "Solve basic probability problems."]
       ],
-      correct: "m/s"
-    }
-  ],
 
-
-  "Chemistry-1": [
-    {
-      question:
-        "What is the smallest unit of an element?",
-      answers: [
-        "Atom",
-        "Cell",
-        "Tissue",
-        "Organ"
+      Physics: [
+        ["Light – Reflection and Refraction", "Study reflection, refraction, mirrors and lenses."],
+        ["The Human Eye and the Colourful World", "Learn about the human eye and optical phenomena."],
+        ["Electricity", "Study electric current, voltage, resistance and circuits."],
+        ["Magnetic Effects of Electric Current", "Learn about magnetic fields and electromagnetic effects."],
+        ["Sources of Energy", "Compare different sources of energy and their uses."]
       ],
-      correct: "Atom"
-    },
 
-    {
-      question:
-        "Water is represented by:",
-      answers: [
-        "CO₂",
-        "O₂",
-        "H₂O",
-        "NaCl"
+      Chemistry: [
+        ["Chemical Reactions and Equations", "Learn how chemical reactions are represented and balanced."],
+        ["Acids, Bases and Salts", "Study properties and uses of acids, bases and salts."],
+        ["Metals and Non-metals", "Compare properties and reactions of metals and non-metals."],
+        ["Carbon and Its Compounds", "Study carbon compounds and their properties."],
+        ["Periodic Classification of Elements", "Understand the periodic table and trends."]
       ],
-      correct: "H₂O"
-    }
-  ],
 
-
-  "Biology-0": [
-    {
-      question:
-        "The basic unit of life is:",
-      answers: [
-        "Tissue",
-        "Cell",
-        "Organ",
-        "Organ system"
+      Biology: [
+        ["Life Processes", "Study nutrition, respiration, transportation and excretion."],
+        ["Control and Coordination", "Learn how organisms coordinate their activities."],
+        ["How Do Organisms Reproduce?", "Study reproduction in organisms."],
+        ["Heredity", "Learn basic concepts of heredity and variation."],
+        ["Our Environment", "Study ecosystems, food chains and environmental balance."]
       ],
-      correct: "Cell"
-    },
 
-    {
-      question:
-        "Which structure controls many cell activities?",
-      answers: [
-        "Nucleus",
-        "Cell wall",
-        "Vacuole",
-        "Cytoplasm"
+      "Social Science": [
+        ["Resources and Development", "Study resources, development and resource planning."],
+        ["Forest and Wildlife Resources", "Learn about biodiversity and conservation."],
+        ["Water Resources", "Study water availability, conservation and management."],
+        ["Agriculture", "Learn about farming and major crops."],
+        ["Manufacturing Industries", "Study major industries and their importance."],
+        ["Power Sharing", "Understand different forms of power sharing."],
+        ["Federalism", "Learn about federal government systems."],
+        ["Political Parties", "Study the role and functions of political parties."],
+        ["Development", "Understand different ideas and measures of development."],
+        ["Sectors of the Indian Economy", "Study primary, secondary and tertiary sectors."]
       ],
-      correct: "Nucleus"
+
+      English: [
+        ["A Letter to God", "Study the story, characters and important themes."],
+        ["Nelson Mandela", "Learn about the lesson and its central ideas."],
+        ["Two Stories About Flying", "Read and understand both stories."],
+        ["From the Diary of Anne Frank", "Study the diary entry and its themes."],
+        ["Grammar", "Practice important Class 10 grammar topics."],
+        ["Writing Skills", "Practice formal letters, analytical paragraphs and other formats."]
+      ]
     }
-  ],
+  };
 
 
-  "Social Science-0": [
-    {
-      question:
-        "India is located in which continent?",
-      answers: [
-        "Europe",
-        "Asia",
-        "Africa",
-        "Australia"
-      ],
-      correct: "Asia"
-    },
+  // ==========================================
+  // ELEMENTS
+  // ==========================================
 
-    {
-      question:
-        "India lies mainly in which hemisphere?",
-      answers: [
-        "Northern Hemisphere",
-        "Southern Hemisphere",
-        "Western Hemisphere",
-        "None"
-      ],
-      correct: "Northern Hemisphere"
-    }
-  ],
+  const classSelect = document.getElementById("classSelect");
+  const subjectsElement = document.getElementById("subjects");
+  const chapterSection = document.getElementById("chapterSection");
+  const chaptersElement = document.getElementById("chapters");
+  const chapterTitle = document.getElementById("chapterTitle");
 
+  const chapterDetails = document.getElementById("chapterDetails");
+  const selectedChapterTitle = document.getElementById("selectedChapterTitle");
+  const chapterDescription = document.getElementById("chapterDescription");
+  const chapterNotes = document.getElementById("chapterNotes");
 
-  "English-0": [
-    {
-      question:
-        "Which word is a noun?",
-      answers: [
-        "Run",
-        "Beautiful",
-        "School",
-        "Quickly"
-      ],
-      correct: "School"
-    },
+  const saveChapterNotesBtn =
+    document.getElementById("saveChapterNotesBtn");
 
-    {
-      question:
-        "Which word is a verb?",
-      answers: [
-        "Run",
-        "Blue",
-        "Book",
-        "Happy"
-      ],
-      correct: "Run"
-    }
-  ]
+  const completeChapterBtn =
+    document.getElementById("completeChapterBtn");
 
-};
+  const chapterNoteMessage =
+    document.getElementById("chapterNoteMessage");
 
+  let selectedSubject = "";
+  let selectedChapter = null;
 
-// ============================================
-// START QUIZ
-// ============================================
 
-const startChapterQuizBtn =
-  document.getElementById(
-    "startChapterQuizBtn"
-  );
+  // ==========================================
+  // SHOW SUBJECTS
+  // ==========================================
 
+  function showSubjects() {
 
-startChapterQuizBtn.addEventListener(
-  "click",
-  () => {
+    if (!classSelect || !subjectsElement) return;
 
-    const quizKey =
-      `${selectedSubject}-${selectedChapter}`;
-
-    currentQuiz =
-      quizDatabase[quizKey] || [
-
-        {
-          question:
-            "What is the best way to learn?",
-          answers: [
-            "Never practice",
-            "Practice regularly",
-            "Never revise",
-            "Give up"
-          ],
-          correct:
-            "Practice regularly"
-        },
-
-        {
-          question:
-            "What should you do after learning a topic?",
-          answers: [
-            "Forget it",
-            "Practice and revise",
-            "Stop studying",
-            "Avoid questions"
-          ],
-          correct:
-            "Practice and revise"
-        }
-
-      ];
-
-    currentQuestion = 0;
-
-    quizScore = 0;
-
-    quizSection.classList.remove(
-      "hidden"
-    );
-
-    showQuizQuestion();
-
-    window.scrollTo({
-      top: quizSection.offsetTop - 15,
-      behavior: "smooth"
-    });
-
-  }
-);
-
-
-// ============================================
-// SHOW QUIZ QUESTION
-// ============================================
-
-function showQuizQuestion() {
-
-  const question =
-    currentQuiz[currentQuestion];
-
-  document.getElementById(
-    "quizProgress"
-  ).textContent =
-    `Question ${currentQuestion + 1} of ${currentQuiz.length}`;
-
-  document.getElementById(
-    "question"
-  ).textContent =
-    question.question;
-
-  const answers =
-    document.getElementById("answers");
-
-  answers.innerHTML = "";
-
-  document.getElementById(
-    "quizResult"
-  ).textContent = "";
-
-  question.answers.forEach(
-    answer => {
-
-      const button =
-        document.createElement("button");
-
-      button.className =
-        "answer-btn";
-
-      button.textContent =
-        answer;
-
-      button.addEventListener(
-        "click",
-        () => checkQuizAnswer(
-          answer,
-          button
-        )
-      );
-
-      answers.appendChild(button);
-
-    }
-  );
-
-}
-
-
-// ============================================
-// CHECK QUIZ ANSWER
-// ============================================
-
-function checkQuizAnswer(
-  answer,
-  clickedButton
-) {
-
-  const correct =
-    currentQuiz[currentQuestion].correct;
-
-  const buttons =
-    document.querySelectorAll(
-      ".answer-btn"
-    );
-
-  buttons.forEach(
-    button => {
-      button.disabled = true;
-    }
-  );
-
-  if (answer === correct) {
-
-    quizScore++;
-
-    clickedButton.classList.add(
-      "correct"
-    );
-
-  } else {
-
-    clickedButton.classList.add(
-      "wrong"
-    );
-
-    buttons.forEach(
-      button => {
-
-        if (
-          button.textContent === correct
-        ) {
-
-          button.classList.add(
-            "correct"
-          );
-
-        }
-
-      }
-    );
-
-  }
-
-  setTimeout(() => {
-
-    currentQuestion++;
-
-    if (
-      currentQuestion <
-      currentQuiz.length
-    ) {
-
-      showQuizQuestion();
-
-    } else {
-
-      finishQuiz();
-
-    }
-
-  }, 700);
-
-}
-
-
-// ============================================
-// FINISH QUIZ
-// ============================================
-
-function finishQuiz() {
-
-  document.getElementById(
-    "quizProgress"
-  ).textContent =
-    "🎉 Quiz Complete";
-
-  document.getElementById(
-    "question"
-  ).textContent =
-    `You scored ${quizScore}/${currentQuiz.length}`;
-
-  document.getElementById(
-    "answers"
-  ).innerHTML = "";
-
-  const percentage =
-    Math.round(
-      (quizScore / currentQuiz.length) * 100
-    );
-
-  document.getElementById(
-    "quizResult"
-  ).textContent =
-    `Your score: ${percentage}% 🏆`;
-
-  document.getElementById(
-    "quizScore"
-  ).textContent =
-    `${quizScore}/${currentQuiz.length}`;
-
-  updateProgress();
-
-}
-
-
-// ============================================
-// SEARCH
-// ============================================
-
-searchInput.addEventListener(
-  "input",
-  () => {
-
-    const search =
-      searchInput.value
-        .toLowerCase()
-        .trim();
-
-    if (search === "") {
-
-      showSubjects();
-
-      return;
-
-    }
+    const selectedClass = classSelect.value;
 
     subjectsElement.innerHTML = "";
 
-    let found = false;
-
-    Object.entries(subjectsData)
-      .forEach(
-        ([subject, data]) => {
-
-          const subjectMatches =
-            subject
-              .toLowerCase()
-              .includes(search);
-
-          const matchingChapters =
-            data.chapters.filter(
-              chapter =>
-                chapter.name
-                  .toLowerCase()
-                  .includes(search)
-            );
-
-          if (
-            subjectMatches ||
-            matchingChapters.length > 0
-          ) {
-
-            found = true;
-
-            const card =
-              document.createElement("button");
-
-            card.className =
-              "subject-card";
-
-            card.innerHTML = `
-              <span>${data.icon}</span>
-
-              <strong>${subject}</strong>
-
-              <small>
-                ${
-                  matchingChapters.length
-                } matching chapter(s)
-              </small>
-            `;
-
-            card.addEventListener(
-              "click",
-              () => showChapters(subject)
-            );
-
-            subjectsElement.appendChild(
-              card
-            );
-
-          }
-
-        }
-      );
-
-    if (!found) {
-
-      subjectsElement.innerHTML = `
-        <div class="panel">
-          🔎 No subjects or chapters found.
-        </div>
-      `;
-
+    if (!lessons[selectedClass]) {
+      subjectsElement.innerHTML =
+        "<p>Please select your class.</p>";
+      return;
     }
 
+    const classLessons = lessons[selectedClass];
+
+    Object.keys(classLessons).forEach(subject => {
+
+      const card = document.createElement("button");
+
+      card.className = "subject-card";
+
+      card.innerHTML = `
+        <h3>${getSubjectIcon(subject)} ${subject}</h3>
+        <p>${classLessons[subject].length} lessons</p>
+      `;
+
+      card.addEventListener("click", () => {
+        showChapters(subject);
+      });
+
+      subjectsElement.appendChild(card);
+    });
+
+    // Close old chapter/details screens
+    if (chapterSection) {
+      chapterSection.classList.add("hidden");
+    }
+
+    if (chapterDetails) {
+      chapterDetails.classList.add("hidden");
+    }
   }
-);
 
 
-// ============================================
-// HOME BUTTON
-// =================================
+  // ==========================================
+  // SUBJECT ICON
+  // ==========================================
+
+  function getSubjectIcon(subject) {
+
+    const icons = {
+      Maths: "📐",
+      Physics: "⚡",
+      Chemistry: "🧪",
+      Biology: "🧬",
+      "Social Science": "🌍",
+      English: "📚"
+    };
+
+    return icons[subject] || "📖";
+  }
+
+
+  // ==========================================
+  // SHOW CHAPTERS
+  // ==========================================
+
+  function showChapters(subject) {
+
+    const selectedClass = classSelect.value;
+
+    selectedSubject = subject;
+    selectedChapter = null;
+
+    const subjectLessons =
+      lessons[selectedClass][subject];
+
+    chapterTitle.textContent =
+      `${getSubjectIcon(subject)} ${subject} — Class ${selectedClass}`;
+
+    chaptersElement.innerHTML = "";
+
+    subjectLessons.forEach((lesson, index) => {
+
+      const button = document.createElement("button");
+
+      button.className = "chapter-card";
+
+      button.innerHTML = `
+        <span class="chapter-number">
+          ${index + 1}
+        </span>
+
+        <span class="chapter-info">
+          <strong>${lesson[0]}</strong>
+          <small>${lesson[1]}</small>
+        </span>
+
+        <span>➜</span>
+      `;
+
+      button.addEventListener("click", () => {
+        showLesson(index);
+      });
+
+      chaptersElement.appendChild(button);
+    });
+
+    chapterSection.classList.remove("hidden");
+
+    window.scrollTo({
+      top: chapterSection.offsetTop - 20,
+      behavior: "smooth"
+    });
+  }
+
+
+  // ==========================================
+  // SHOW LESSON
+  // ==========================================
+
+  function showLesson(index) {
+
+    const selectedClass = classSelect.value;
+
+    const lesson =
+      lessons[selectedClass][selectedSubject][index];
+
+    selectedChapter = index;
+
+    selectedChapterTitle.textContent =
+      `📖 ${lesson[0]}`;
+
+    chapterDescription.textContent =
+      lesson[1];
+
+    // Load saved notes
+    const noteKey =
+      `studyBuddyNotes_${selectedClass}_${selectedSubject}_${index}`;
+
+    chapterNotes.value =
+      localStorage.getItem(noteKey) || "";
+
+    chapterNoteMessage.textContent = "";
+
+    chapterDetails.classList.remove("hidden");
+
+    window.scrollTo({
+      top: chapterDetails.offsetTop - 20,
+      behavior: "smooth"
+    });
+  }
+
+
+  // ==========================================
+  // SAVE NOTES
+  // ==========================================
+
+  if (saveChapterNotesBtn) {
+
+    saveChapterNotesBtn.addEventListener("click", () => {
+
+      if (selectedChapter === null) return;
+
+      const selectedClass = classSelect.value;
+
+      const noteKey =
+        `studyBuddyNotes_${selectedClass}_${selectedSubject}_${selectedChapter}`;
+
+      localStorage.setItem(
+        noteKey,
+        chapterNotes.value
+      );
+
+      chapterNoteMessage.textContent =
+        "✅ Notes saved successfully!";
+    });
+  }
+
+
+  // ==========================================
+  // MARK LESSON COMPLETE
+  // ==========================================
+
+  if (completeChapterBtn) {
+
+    completeChapterBtn.addEventListener("click", () => {
+
+      if (selectedChapter === null) return;
+
+      const selectedClass = classSelect.value;
+
+      const completeKey =
+        `studyBuddyComplete_${selectedClass}_${selectedSubject}_${selectedChapter}`;
+
+      localStorage.setItem(
+        completeKey,
+        "completed"
+      );
+
+      completeChapterBtn.textContent =
+        "✅ Lesson Completed";
+
+      completeChapterBtn.disabled = true;
+    });
+  }
+
+
+  // ==========================================
+  // BACK TO SUBJECTS
+  // ==========================================
+
+  const backToSubjectsBtn =
+    document.getElementById("backToSubjectsBtn");
+
+  if (backToSubjectsBtn) {
+
+    backToSubjectsBtn.addEventListener("click", () => {
+
+      chapterSection.classList.add("hidden");
+
+      if (chapterDetails) {
+        chapterDetails.classList.add("hidden");
+      }
+
+      window.scrollTo({
+        top: subjectsElement.offsetTop - 20,
+        behavior: "smooth"
+      });
+    });
+  }
+
+
+  // ==========================================
+  // BACK TO CHAPTERS
+  // ==========================================
+
+  const backToChaptersBtn =
+    document.getElementById("backToChaptersBtn");
+
+  if (backToChaptersBtn) {
+
+    backToChaptersBtn.addEventListener("click", () => {
+
+      chapterDetails.classList.add("hidden");
+
+      window.scrollTo({
+        top: chapterSection.offsetTop - 20,
+        behavior: "smooth"
+      });
+    });
+  }
+
+
+  // ==========================================
+  // CLASS CHANGE
+  // ==========================================
+
+  if (classSelect) {
+
+    classSelect.addEventListener("change", () => {
+
+      localStorage.setItem(
+        "studyBuddyClass",
+        classSelect.value
+      );
+
+      showSubjects();
+    });
+  }
+
+
+  // ==========================================
+  // LOAD SAVED CLASS
+  // ==========================================
+
+  const savedClass =
+    localStorage.getItem("studyBuddyClass");
+
+  if (savedClass && lessons[savedClass]) {
+
+    classSelect.value = savedClass;
+
+  } else {
+
+    // Default Class 9
+    classSelect.value = "9";
+  }
+
+
+  // ==========================================
+  // START
+  // ==========================================
+
+  showSubjects();
+
+});
