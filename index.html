@@ -3,192 +3,510 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Study Buddy</title>
+
+  <title>Study Buddy V2</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+  <!-- HEADER -->
+
   <header class="topbar">
-    <div>
-      <h1>🎓 Study Buddy</h1>
-      <p>Your personal study companion</p>
+
+    <div class="brand">
+      <div class="logo">🎓</div>
+
+      <div>
+        <h1>Study Buddy</h1>
+        <p>Your personal study companion</p>
+      </div>
     </div>
 
-    <button id="darkModeBtn">🌙</button>
+    <button id="darkModeBtn" class="icon-btn">
+      🌙
+    </button>
+
   </header>
+
 
   <main>
 
-    <!-- Dashboard -->
+    <!-- WELCOME -->
+
     <section class="hero">
+
       <div>
-        <h2>Welcome, Student! 👋</h2>
-        <p>Let's make studying easier and more fun.</p>
+
+        <p class="welcome-small">
+          Welcome back 👋
+        </p>
+
+        <h2>
+          <span id="studentGreeting">Student</span>!
+        </h2>
+
+        <p>
+          Learn • Practice • Improve 🚀
+        </p>
+
       </div>
-      <div class="hero-icon">📚</div>
+
+      <div class="hero-icon">
+        📚
+      </div>
+
     </section>
 
-    <!-- Search -->
+
+    <!-- STUDENT SETUP -->
+
+    <section class="panel setup-panel">
+
+      <div class="section-title">
+        <h2>🎒 Student Setup</h2>
+      </div>
+
+      <div class="setup-grid">
+
+        <div class="input-group">
+
+          <label for="studentName">
+            Your Name
+          </label>
+
+          <input
+            type="text"
+            id="studentName"
+            placeholder="Enter your name"
+          >
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label for="classSelect">
+            Select Class
+          </label>
+
+          <select id="classSelect">
+
+            <option value="8">Class 8</option>
+
+            <option value="9" selected>
+              Class 9
+            </option>
+
+            <option value="10">
+              Class 10
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+      <button
+        id="saveStudentBtn"
+        class="primary-btn"
+      >
+        💾 Save Student
+      </button>
+
+      <p id="studentMessage"></p>
+
+    </section>
+
+
+    <!-- SEARCH -->
+
     <section class="search-box">
+
       <input
         type="text"
         id="searchInput"
-        placeholder="🔎 Search subjects or notes..."
+        placeholder="🔎 Search subjects or chapters..."
       >
+
     </section>
 
-    <!-- Quick Stats -->
+
+    <!-- STATS -->
+
     <section class="stats">
+
       <div class="stat-card">
+
         <span>📚</span>
-        <strong id="subjectCount">6</strong>
-        <small>Subjects</small>
+
+        <strong id="subjectCount">
+          6
+        </strong>
+
+        <small>
+          Subjects
+        </small>
+
       </div>
 
+
       <div class="stat-card">
+
+        <span>📖</span>
+
+        <strong id="chapterCount">
+          0
+        </strong>
+
+        <small>
+          Chapters
+        </small>
+
+      </div>
+
+
+      <div class="stat-card">
+
         <span>🧠</span>
-        <strong id="quizScore">0</strong>
-        <small>Quiz Score</small>
+
+        <strong id="quizScore">
+          0
+        </strong>
+
+        <small>
+          Quiz Score
+        </small>
+
       </div>
 
+
       <div class="stat-card">
+
         <span>⏱️</span>
-        <strong id="studyMinutes">0</strong>
-        <small>Minutes</small>
+
+        <strong id="studyMinutes">
+          0
+        </strong>
+
+        <small>
+          Study Minutes
+        </small>
+
       </div>
 
-      <div class="stat-card">
-        <span>🏆</span>
-        <strong id="progress">0%</strong>
-        <small>Progress</small>
-      </div>
     </section>
 
-    <!-- Subjects -->
+
+    <!-- SUBJECTS -->
+
     <section>
+
       <div class="section-title">
-        <h2>📚 Subjects</h2>
-      </div>
 
-      <div class="subjects" id="subjects">
+        <h2>
+          📚 Subjects
+        </h2>
 
-        <button class="subject-card" data-subject="Maths">
-          <span>📐</span>
-          <strong>Maths</strong>
-          <small>Numbers & Problems</small>
-        </button>
-
-        <button class="subject-card" data-subject="Physics">
-          <span>⚡</span>
-          <strong>Physics</strong>
-          <small>Motion & Energy</small>
-        </button>
-
-        <button class="subject-card" data-subject="Chemistry">
-          <span>🧪</span>
-          <strong>Chemistry</strong>
-          <small>Matter & Reactions</small>
-        </button>
-
-        <button class="subject-card" data-subject="Biology">
-          <span>🧬</span>
-          <strong>Biology</strong>
-          <small>Life & Nature</small>
-        </button>
-
-        <button class="subject-card" data-subject="Social Science">
-          <span>🌍</span>
-          <strong>Social Science</strong>
-          <small>History & Geography</small>
-        </button>
-
-        <button class="subject-card" data-subject="English">
-          <span>📖</span>
-          <strong>English</strong>
-          <small>Grammar & Literature</small>
+        <button
+          id="homeBtn"
+          class="small-btn"
+        >
+          🏠 Home
         </button>
 
       </div>
+
+
+      <div
+        class="subjects"
+        id="subjects"
+      >
+
+        <!-- Created by JavaScript -->
+
+      </div>
+
     </section>
 
-    <!-- Notes -->
-    <section class="panel">
+
+    <!-- CHAPTERS -->
+
+    <section
+      id="chapterSection"
+      class="panel hidden"
+    >
+
       <div class="section-title">
-        <h2>📝 Quick Notes</h2>
+
+        <h2 id="chapterTitle">
+          📖 Chapters
+        </h2>
+
+        <button
+          id="backToSubjectsBtn"
+          class="small-btn"
+        >
+          ← Subjects
+        </button>
+
       </div>
 
-      <textarea
-        id="notes"
-        placeholder="Write your study notes here..."
-      ></textarea>
 
-      <button class="primary-btn" id="saveNotesBtn">
-        💾 Save Notes
-      </button>
+      <div
+        id="chapters"
+        class="chapters"
+      >
 
-      <p id="saveMessage"></p>
+        <!-- Created by JavaScript -->
+
+      </div>
+
     </section>
 
-    <!-- Quiz -->
-    <section class="panel">
+
+    <!-- CHAPTER DETAILS -->
+
+    <section
+      id="chapterDetails"
+      class="panel hidden"
+    >
+
       <div class="section-title">
-        <h2>🧠 Quick Quiz</h2>
+
+        <h2 id="selectedChapterTitle">
+          📖 Chapter
+        </h2>
+
+        <button
+          id="backToChaptersBtn"
+          class="small-btn"
+        >
+          ← Chapters
+        </button>
+
       </div>
+
+
+      <div class="chapter-content">
+
+        <div class="info-box">
+
+          <h3>
+            📝 Notes
+          </h3>
+
+          <p id="chapterDescription">
+            Select a chapter to begin.
+          </p>
+
+        </div>
+
+
+        <textarea
+          id="chapterNotes"
+          placeholder="Write your own notes for this chapter..."
+        ></textarea>
+
+
+        <button
+          id="saveChapterNotesBtn"
+          class="primary-btn"
+        >
+          💾 Save Chapter Notes
+        </button>
+
+        <p id="chapterNoteMessage"></p>
+
+
+        <div class="chapter-actions">
+
+          <button
+            id="startChapterQuizBtn"
+            class="primary-btn"
+          >
+            🧠 Start Chapter Quiz
+          </button>
+
+          <button
+            id="completeChapterBtn"
+            class="secondary-btn"
+          >
+            ✅ Mark Chapter Complete
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- QUIZ -->
+
+    <section
+      id="quizSection"
+      class="panel hidden"
+    >
+
+      <div class="section-title">
+
+        <h2>
+          🧠 Chapter Quiz
+        </h2>
+
+      </div>
+
 
       <div id="quizContainer">
-        <h3 id="question">Click Start Quiz to begin!</h3>
 
-        <div id="answers"></div>
+        <p id="quizProgress">
+          Question 1
+        </p>
 
-        <button class="primary-btn" id="startQuizBtn">
-          ▶️ Start Quiz
-        </button>
+        <h3 id="question">
+          Question
+        </h3>
+
+        <div
+          id="answers"
+          class="answers"
+        ></div>
 
         <p id="quizResult"></p>
+
       </div>
+
     </section>
 
-    <!-- Study Timer -->
+
+    <!-- TIMER -->
+
     <section class="panel timer-panel">
+
       <div class="section-title">
-        <h2>⏱️ Study Timer</h2>
+
+        <h2>
+          ⏱️ Study Timer
+        </h2>
+
       </div>
 
-      <div id="timer">25:00</div>
+
+      <div id="timer">
+        25:00
+      </div>
+
+
+      <p class="timer-info">
+        Focus for 25 minutes, then take a short break.
+      </p>
+
 
       <div class="timer-buttons">
-        <button class="primary-btn" id="startTimerBtn">
+
+        <button
+          class="primary-btn"
+          id="startTimerBtn"
+        >
           ▶️ Start
         </button>
 
-        <button class="secondary-btn" id="pauseTimerBtn">
+        <button
+          class="secondary-btn"
+          id="pauseTimerBtn"
+        >
           ⏸️ Pause
         </button>
 
-        <button class="secondary-btn" id="resetTimerBtn">
+        <button
+          class="secondary-btn"
+          id="resetTimerBtn"
+        >
           🔄 Reset
         </button>
+
       </div>
+
     </section>
 
-    <!-- Motivation -->
+
+    <!-- PROGRESS -->
+
+    <section class="panel">
+
+      <div class="section-title">
+
+        <h2>
+          📊 My Progress
+        </h2>
+
+      </div>
+
+
+      <div class="progress-container">
+
+        <div class="progress-header">
+
+          <span>
+            Overall Progress
+          </span>
+
+          <strong id="progress">
+            0%
+          </strong>
+
+        </div>
+
+
+        <div class="progress-bar">
+
+          <div
+            id="progressFill"
+            class="progress-fill"
+          ></div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- MOTIVATION -->
+
     <section class="motivation">
-      <h2>🔥 Today's Motivation</h2>
+
+      <h2>
+        🔥 Today's Motivation
+      </h2>
+
       <p id="motivationText">
         Small progress every day becomes big progress.
       </p>
 
-      <button class="primary-btn" id="motivationBtn">
+      <button
+        class="primary-btn"
+        id="motivationBtn"
+      >
         ✨ New Motivation
       </button>
+
     </section>
 
   </main>
 
+
   <footer>
-    <p>🎓 Study Buddy © 2026</p>
+
+    <p>
+      🎓 Study Buddy V2 • Learn smarter 🚀
+    </p>
+
   </footer>
+
 
   <script src="script.js"></script>
 
