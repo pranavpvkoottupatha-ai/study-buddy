@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Buddy</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header class="topbar">
+    <div>
+      <h1>🎓 Study Buddy</h1>
+      <p>Your personal study companion</p>
+    </div>
+
+    <button id="darkModeBtn">🌙</button>
+  </header>
+
+  <main>
+
+    <!-- Dashboard -->
+    <section class="hero">
+      <div>
+        <h2>Welcome, Student! 👋</h2>
+        <p>Let's make studying easier and more fun.</p>
+      </div>
+      <div class="hero-icon">📚</div>
+    </section>
+
+    <!-- Search -->
+    <section class="search-box">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="🔎 Search subjects or notes..."
+      >
+    </section>
+
+    <!-- Quick Stats -->
+    <section class="stats">
+      <div class="stat-card">
+        <span>📚</span>
+        <strong id="subjectCount">6</strong>
+        <small>Subjects</small>
+      </div>
+
+      <div class="stat-card">
+        <span>🧠</span>
+        <strong id="quizScore">0</strong>
+        <small>Quiz Score</small>
+      </div>
+
+      <div class="stat-card">
+        <span>⏱️</span>
+        <strong id="studyMinutes">0</strong>
+        <small>Minutes</small>
+      </div>
+
+      <div class="stat-card">
+        <span>🏆</span>
+        <strong id="progress">0%</strong>
+        <small>Progress</small>
+      </div>
+    </section>
+
+    <!-- Subjects -->
+    <section>
+      <div class="section-title">
+        <h2>📚 Subjects</h2>
+      </div>
+
+      <div class="subjects" id="subjects">
+
+        <button class="subject-card" data-subject="Maths">
+          <span>📐</span>
+          <strong>Maths</strong>
+          <small>Numbers & Problems</small>
+        </button>
+
+        <button class="subject-card" data-subject="Physics">
+          <span>⚡</span>
+          <strong>Physics</strong>
+          <small>Motion & Energy</small>
+        </button>
+
+        <button class="subject-card" data-subject="Chemistry">
+          <span>🧪</span>
+          <strong>Chemistry</strong>
+          <small>Matter & Reactions</small>
+        </button>
+
+        <button class="subject-card" data-subject="Biology">
+          <span>🧬</span>
+          <strong>Biology</strong>
+          <small>Life & Nature</small>
+        </button>
+
+        <button class="subject-card" data-subject="Social Science">
+          <span>🌍</span>
+          <strong>Social Science</strong>
+          <small>History & Geography</small>
+        </button>
+
+        <button class="subject-card" data-subject="English">
+          <span>📖</span>
+          <strong>English</strong>
+          <small>Grammar & Literature</small>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- Notes -->
+    <section class="panel">
+      <div class="section-title">
+        <h2>📝 Quick Notes</h2>
+      </div>
+
+      <textarea
+        id="notes"
+        placeholder="Write your study notes here..."
+      ></textarea>
+
+      <button class="primary-btn" id="saveNotesBtn">
+        💾 Save Notes
+      </button>
+
+      <p id="saveMessage"></p>
+    </section>
+
+    <!-- Quiz -->
+    <section class="panel">
+      <div class="section-title">
+        <h2>🧠 Quick Quiz</h2>
+      </div>
+
+      <div id="quizContainer">
+        <h3 id="question">Click Start Quiz to begin!</h3>
+
+        <div id="answers"></div>
+
+        <button class="primary-btn" id="startQuizBtn">
+          ▶️ Start Quiz
+        </button>
+
+        <p id="quizResult"></p>
+      </div>
+    </section>
+
+    <!-- Study Timer -->
+    <section class="panel timer-panel">
+      <div class="section-title">
+        <h2>⏱️ Study Timer</h2>
+      </div>
+
+      <div id="timer">25:00</div>
+
+      <div class="timer-buttons">
+        <button class="primary-btn" id="startTimerBtn">
+          ▶️ Start
+        </button>
+
+        <button class="secondary-btn" id="pauseTimerBtn">
+          ⏸️ Pause
+        </button>
+
+        <button class="secondary-btn" id="resetTimerBtn">
+          🔄 Reset
+        </button>
+      </div>
+    </section>
+
+    <!-- Motivation -->
+    <section class="motivation">
+      <h2>🔥 Today's Motivation</h2>
+      <p id="motivationText">
+        Small progress every day becomes big progress.
+      </p>
+
+      <button class="primary-btn" id="motivationBtn">
+        ✨ New Motivation
+      </button>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>🎓 Study Buddy © 2026</p>
+  </footer>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
